@@ -1,16 +1,23 @@
 import 'dart:io';
-import 'package:html/parser.dart' show parse;
+import 'package:html/dom.dart';
+import 'package:html/parser.dart' as html_parser;
 
 
 /// creating parser function like beautifulSoup using html5lib parser
-Future<String> parser(String file) async {
-  final data = File(file);
+Future<Document> parser(String files) async {
+  final data = File(files);
+  
   var content = await data.readAsString();
-  String html_string = parse(content).outerHtml;
-  return html_string;
+  Document html_doc = html_parser.parse(content);
+  return html_doc;
 }
 
+// parsing process
 main(List<String> args) async {
-  var html_file = await parser('panduan1.html');
-  print(html_file);
+  var soup = await parser('panduan1.html');
+  final contents = soup.querySelectorAll('p');
+  for (final content in contents) {
+    print(content.text);
+  }
+
 }
